@@ -5,112 +5,81 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/13 11:04:34 by mescande          #+#    #+#             */
-/*   Updated: 2019/04/22 15:53:14 by mescande         ###   ########.fr       */
+/*   Created: 2019/04/24 12:07:06 by mescande          #+#    #+#             */
+/*   Updated: 2019/04/25 04:49:03 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-void	*ft_memrealloc(void *src, size_t size)
+int		end_in_buff(char *buff)
 {
-	void *dst;
-
-	if (!(dst = malloc(size)))
-		return (NULL);
-	if (src == NULL)
-		return (dst);
-	ft_bzero(dst, size);
-	dst = ft_memcpy(dst, src, size);
-	ft_bzero(src, size);
-//	free(src);
-	return (dst);
+	while (*buff)
+	{
+		if (*buff == '\n' || *buff == -1)
+			return (1);
+		buff++;
+	}
+	return (0);
 }
 
-int		noend(char *buff)
+int		ft_retfree(void *buff)
 {
-	int i;
-
-	i = -1;
-	while (++i < BUFF_SIZE)
-		if (buff[i] == '\n' || buff[i] == -1)
-			return (i);
+	free(buff);
 	return (-1);
 }
 
-int		end(char **line, char **buff, int len)
+int		returnvalue(char **buff, char **line)
 {
-	int 	i;
+	int		i;
+	char	*tmp;
+	char	*save;
+	int		len;
 
 	i = 0;
-	while (buff[0][i] != '\n' && buff[0][i] != -1 && i < BUFF_SIZE)
-		line[0][len++] = buff[0][i++];
-	if (!(*line = (char *)ft_memrealloc(*line, len + 1)))
-		return (-1);
-	line[0][len] = '\0';
+	if (!(tmp = (char *)ft_memalloc(BUFF_SIZE + 1)))
+		return (ft_retfree(*line));
+	while (buff[0][i] != '\n' && buff[0][i] != -1)
+	{
+		tmp[i] = buff[0][i];
+		i++;
+	}
+	save = ft_strjoin(*line, tmp);
+	free(tmp);
+	free(*line);
+	*line = save;
 	if (buff[0][i] == -1)
-		return (0);
-	if (buff[0][i + 1] == '\0')
-		buff[0] = NULL;
-	else
-		buff[0] += i + 1;
+		return (ft_retfree(*buff));
+	len = ft_strlen(*buff);
+	*buff = ft_memmove((void *)(*buff), (void *)((*buff) + i + 1), len - i);
+	ft_bzero(buff[0] + len - i, len - (i + 1));
 	return (1);
-}
-
-size_t	ft_strcpynreturn(char *dst, char **src, int len)
-{
-	size_t	l;
-
-	l = 0;
-	while (src[0][l] != '\0' && src[0][l] != '\n' && src[0][l] != -1)
-	{
-		dst[l] = src[0][l];
-		l++;
-	}
-	dst[l] = '\0';
-	if (src[0][l] == -1)
-	{
-		src[0] = NULL;
-		return (-2);
-	}
-	if (src[0][l] == '\n')
-	{
-		src[0] += l + 1;
-		return (-1);
-	}
-	return (l + len);
 }
 
 int		get_next_line(const int fd, char **line)
 {
-	int			len;
-	int			nbr_buff;
-	static char	*buff;
+	static char		*buff;
+	char			*tmp;
+	ssize_t			val;
 
-	len = 0;
-	nbr_buff = 2;
-	if (!(*line = (char *)ft_memrealloc(NULL, nbr_buff * BUFF_SIZE)))
-		return (-1);
-	if (buff)
-		len = ft_strcpynreturn(*line, &buff, len);
-	if (!(buff = (char *)ft_memrealloc(buff, BUFF_SIZE + 1)))
-		return (-1);
-	if (len < 0)
-		return (len == -1 ? 1 : 0);
-	while (read(fd, buff, BUFF_SIZE))
+	if (!buff)
+		if (!(buff = (char *)ft_memalloc(BUFF_SIZE + 1)))
+			return (-1);
+	val = 1;
+	*line = ft_strnew(1);
+	while (buff && val)
 	{
-//		if (!(*line = (char *)ft_memrealloc(*line, nbr_buff++ * BUFF_SIZE)))
-//			return (-1);
-		if (noend(buff) == -1)
-//		{
-//			printf("Line : %s\nBuff ; %s\t\t%d, %d\n", *line, buff, len, nbr_buff);
-			*line = ft_strjoin(*line, buff);
-//			printf("line ; %s\n", *line);
-//		}
+		if (end_in_buff(buff))
+			return (returnvalue(&buff, line));
 		else
-			return (end(line, &buff, len));
-		len += BUFF_SIZE;
+		{
+			tmp = ft_strjoin(*line, buff);
+			free(*line);
+			*line = tmp;
+			ft_bzero(buff, BUFF_SIZE + 1);
+			if ((val = read(fd, buff, BUFF_SIZE)) == -1)
+				return (ft_retfree(*line));
+		}
 	}
 	return (0);
 }

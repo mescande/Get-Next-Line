@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/13 11:04:17 by mescande          #+#    #+#             */
-/*   Updated: 2019/04/25 04:52:45 by mescande         ###   ########.fr       */
+/*   Created: 2019/04/03 11:10:14 by mescande          #+#    #+#             */
+/*   Updated: 2019/04/09 14:39:30 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# define BUFF_SIZE 999
-# include <stdlib.h>
-# include <unistd.h>
-# include "libft.h"
+char	*ft_strchr(const char *s, int c)
+{
+	size_t	pos;
+	char	lfi;
 
-int		get_next_line(const int fd, char **line);
-
-#endif
+	lfi = (char)c;
+	pos = 0;
+	while (s[pos] != '\0' || lfi == '\0')
+	{
+		if (s[pos] == lfi)
+			return ((char *)(s + pos));
+		pos++;
+	}
+	return (NULL);
+}

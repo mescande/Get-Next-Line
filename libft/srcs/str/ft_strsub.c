@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strsub.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/13 11:04:17 by mescande          #+#    #+#             */
-/*   Updated: 2019/04/25 04:52:45 by mescande         ###   ########.fr       */
+/*   Created: 2019/04/05 15:18:34 by mescande          #+#    #+#             */
+/*   Updated: 2019/04/08 20:53:17 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# define BUFF_SIZE 999
-# include <stdlib.h>
-# include <unistd.h>
-# include "libft.h"
+char	*ft_strsub(const char *s, unsigned int start, size_t len)
+{
+	char	*res;
+	size_t	i;
 
-int		get_next_line(const int fd, char **line);
-
-#endif
+	if (s == NULL)
+		return (NULL);
+	res = ft_strnew(len);
+	if (!res)
+		return (0);
+	i = 0;
+	while (i < len)
+	{
+		res[i] = s[start + i];
+		i++;
+	}
+	return (res);
+}

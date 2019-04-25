@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/13 11:04:17 by mescande          #+#    #+#             */
-/*   Updated: 2019/04/25 04:52:45 by mescande         ###   ########.fr       */
+/*   Created: 2019/04/02 17:37:42 by mescande          #+#    #+#             */
+/*   Updated: 2019/04/13 18:03:27 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# define BUFF_SIZE 999
-# include <stdlib.h>
-# include <unistd.h>
-# include "libft.h"
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	char	*dsti;
+	char	*srci;
 
-int		get_next_line(const int fd, char **line);
-
-#endif
+	dsti = (char *)dst;
+	srci = (char *)src;
+	if (n == 0)
+		return (dst);
+	while (--n > 0)
+		dsti[n] = srci[n];
+	dsti[0] = srci[0];
+	return (dst);
+}

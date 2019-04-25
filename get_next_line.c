@@ -6,7 +6,7 @@
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:07:06 by mescande          #+#    #+#             */
-/*   Updated: 2019/04/25 04:49:03 by mescande         ###   ########.fr       */
+/*   Updated: 2019/04/25 23:32:23 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ int		end_in_buff(char *buff)
 	return (0);
 }
 
-int		ft_retfree(void *buff)
+int		ft_retfree(void *buff, int ret)
 {
 	free(buff);
-	return (-1);
+	return (ret);
 }
 
 int		returnvalue(char **buff, char **line)
@@ -38,7 +38,7 @@ int		returnvalue(char **buff, char **line)
 
 	i = 0;
 	if (!(tmp = (char *)ft_memalloc(BUFF_SIZE + 1)))
-		return (ft_retfree(*line));
+		return (ft_retfree(*line, -1));
 	while (buff[0][i] != '\n' && buff[0][i] != -1)
 	{
 		tmp[i] = buff[0][i];
@@ -48,11 +48,11 @@ int		returnvalue(char **buff, char **line)
 	free(tmp);
 	free(*line);
 	*line = save;
-	if (buff[0][i] == -1)
-		return (ft_retfree(*buff));
+	if (buff[0][i] == -1 && i == 0)
+		return (ft_retfree(*buff, 0));
 	len = ft_strlen(*buff);
 	*buff = ft_memmove((void *)(*buff), (void *)((*buff) + i + 1), len - i);
-	ft_bzero(buff[0] + len - i, len - (i + 1));
+	ft_bzero(buff[0] + len - i, (i + 1));
 	return (1);
 }
 
@@ -62,10 +62,9 @@ int		get_next_line(const int fd, char **line)
 	char			*tmp;
 	ssize_t			val;
 
-	if (!buff)
-		if (!(buff = (char *)ft_memalloc(BUFF_SIZE + 1)))
+	if ((val = 1) == 0 || !line || !buff)
+		if (!line || !(buff = (char *)ft_memalloc(BUFF_SIZE + 1)))
 			return (-1);
-	val = 1;
 	*line = ft_strnew(1);
 	while (buff && val)
 	{
@@ -78,8 +77,10 @@ int		get_next_line(const int fd, char **line)
 			*line = tmp;
 			ft_bzero(buff, BUFF_SIZE + 1);
 			if ((val = read(fd, buff, BUFF_SIZE)) == -1)
-				return (ft_retfree(*line));
+				return (ft_retfree(*line, -1));
 		}
 	}
-	return (0);
+	if (line[0][0] == 0)
+		return (0);
+	return (1);
 }

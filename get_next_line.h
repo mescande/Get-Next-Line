@@ -6,7 +6,7 @@
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/13 11:04:17 by mescande          #+#    #+#             */
-/*   Updated: 2019/04/25 21:31:44 by mescande         ###   ########.fr       */
+/*   Updated: 2019/04/30 14:13:44 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@
 # include <unistd.h>
 # include "libft.h"
 
-int		get_next_line(const int fd, char **line);
+typedef struct	s_buff
+{
+	char			*buff;
+	int				fd;
+	struct s_buff	*prev;
+	struct s_buff	*next;
+}				t_buff;
+
+int				get_next_line(const int fd, char **line);
 
 #endif

@@ -1,30 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/03 12:06:44 by mescande          #+#    #+#             */
-/*   Updated: 2019/04/12 21:38:57 by mescande         ###   ########.fr       */
+/*   Created: 2019/04/13 13:33:47 by mescande          #+#    #+#             */
+/*   Updated: 2019/04/30 15:41:21 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "get_next_line.h"
+#include <stdio.h>
+#include <fcntl.h>
 
-int		ft_strncmp(const char *s1, const char *s2, size_t n)
+int main(int ac, char **av)
 {
-	size_t pos;
-
-	pos = 0;
-	while ((unsigned char)s1[pos] == (unsigned char)s2[pos] &&
-			s1[pos] != '\0' && pos < n)
-		pos++;
-	if (s1[pos] == '\0' || pos == n)
+//	if (ac != 2)
+//		return (-1);
+	char **line;
+	int fd = open("nou", O_RDONLY);
+	int i = 0;
+	line = (char **)malloc(15 * sizeof(char *));
+	while (ac && get_next_line(fd, line + i))
 	{
-		if (s2[pos] == '\0' || pos == n)
-			return (0);
-		return (-1);
+		printf("%s\nmain\n", line[i++]);
+		fflush(stdout);
 	}
-	return ((unsigned char)s1[pos] - (unsigned char)s2[pos]);
+//	while (1)
+//		;
+	return (0);
 }

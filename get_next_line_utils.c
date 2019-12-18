@@ -6,7 +6,7 @@
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/06 22:45:38 by mescande          #+#    #+#             */
-/*   Updated: 2019/12/12 14:33:15 by mescande         ###   ########.fr       */
+/*   Updated: 2019/12/18 20:16:52 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,17 @@ char	*ft_strndup(char *s, int i)
 	while (i-- > 0)
 		res[i] = s[i];
 	return (res);
+}
+
+void	*ft_memalloc(size_t size)
+{
+	char	*res;
+
+	res = malloc(size);
+	if (res == NULL)
+		return (NULL);
+	while (--size != 0)
+		res[size] = 0;
+	res[0] = 0;
+	return ((void *)res);
 }

@@ -6,7 +6,7 @@
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 21:07:45 by mescande          #+#    #+#             */
-/*   Updated: 2019/12/18 16:11:22 by mescande         ###   ########.fr       */
+/*   Updated: 2019/12/18 20:44:32 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 32
 # endif
 
-# include <fcntl.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -32,6 +30,7 @@ typedef struct	s_buff
 
 char			*ft_strjoin(char *s1, char *s2);
 char			*ft_strndup(char *s, int i);
+void			*ft_memalloc(size_t size);
 
 int				erasebuff(t_buff *buff);
 int				react(char **line, t_buff **buff, int val);

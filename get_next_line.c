@@ -6,13 +6,11 @@
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 16:37:21 by mescande          #+#    #+#             */
-/*   Updated: 2019/12/18 16:11:59 by mescande         ###   ########.fr       */
+/*   Updated: 2019/12/18 20:18:06 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <errno.h>
-#include <string.h>
 
 /*
 ** 0 : continue la lecture // 2 : \n atteint // 1 : -1 atteint
@@ -41,9 +39,11 @@ int		erasebuff(t_buff *buff)
 
 int		react(char **line, t_buff **buff, int val)
 {
+	t_buff	*tmp;
+
 	if (line && val == -1)
 		free(*line);
-	if (*buff && val <= 0)
+	if (buff[0] && val <= 0)
 	{
 		if (buff[0]->buff)
 			free(buff[0]->buff);
@@ -51,8 +51,14 @@ int		react(char **line, t_buff **buff, int val)
 			buff[0]->prev->next = buff[0]->next;
 		if (buff[0]->next)
 			buff[0]->next->prev = buff[0]->prev;
-		free(buff[0]);
-		buff[0] = NULL;
+		tmp = buff[0];
+		if (buff[0]->prev)
+			buff[0] = buff[0]->prev;
+		else if (buff[0]->next)
+			buff[0] = buff[0]->next;
+		else
+			buff[0] = NULL;
+		free(tmp);
 	}
 	return (val);
 }
@@ -73,10 +79,10 @@ t_buff	*binit(t_buff *buff, int fd, t_buff *prev)
 	}
 	if (!buff || i == 1)
 	{
-		if (!(buff = (t_buff *)malloc(sizeof(t_buff))) ||
-				!(buff->buff = (char *)malloc(BUFFER_SIZE + 1)))
+		if (!(buff = (t_buff *)ft_memalloc(sizeof(t_buff))) ||
+				!(buff->buff = (char *)ft_memalloc(BUFFER_SIZE + 1)))
 			return (NULL);
-		buff->fd = (fd < 0 ? -fd : fd);
+		buff->fd = fd;
 		buff->prev = prev;
 		if (!(buff->next = NULL) && prev)
 			prev->next = buff;
@@ -108,42 +114,5 @@ int		get_next_line(int fd, char **line)
 		if ((red = erasebuff(buff)))
 			return (react(line, &buff, red - 1));
 	}
-	if (**line == 0)
-		free(*line);
 	return (react(line, &buff, 0));
-}
-
-int		main(int ac, char **av)
-{
-	int		val;
-	char	*line;
-	int		fd;
-	int		i;
-//	int		fs;
-
-//	fd = open((ac == 1 ? "get_next_line_utils.c" : av[1]), O_RDONLY);
-	fd = open((ac <= 1 ? "test" : av[1]), O_RDONLY);
-//	fs = open((ac <= 2 ? "test" : av[2]), O_RDONLY);
-	i = 0;
-	while (((val = get_next_line(/*(i%2 == 0 ? fd : fs)*/fd, &line))) && i  < 145)
-	{
-		if (val == -1)
-		{
-				free(line);
-			printf("GNL exit with -1, %s\n", strerror(errno));
-			return (1);
-		}
-		printf("%s\n", line);
-		fflush(stdout);
-			free(line);
-		i++;
-	}
-	get_next_line(fd, &line);
-	if (line)
-	{
-		printf("%s", line);
-		free(line);
-	}
-//	printf("T'es a la fin mon vieux\n");
-	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mescande <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 21:07:45 by mescande          #+#    #+#             */
-/*   Updated: 2019/12/06 23:45:35 by mescande         ###   ########.fr       */
+/*   Updated: 2019/12/18 16:11:22 by mescande         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 32
+#  define BUFFER_SIZE 1
 # endif
 
 # include <fcntl.h>
@@ -34,7 +34,7 @@ char			*ft_strjoin(char *s1, char *s2);
 char			*ft_strndup(char *s, int i);
 
 int				erasebuff(t_buff *buff);
-int				react(char **line, t_buff *buff, int val);
+int				react(char **line, t_buff **buff, int val);
 t_buff			*binit(t_buff *buff, int fd, t_buff *prev);
 int				get_next_line(int fd, char **line);
 
